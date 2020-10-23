@@ -80,6 +80,16 @@ alias mv='mv -i'
 
 alias diskusage='ncdu'
 
+###################################################################################################################
+# Audio Device Settings - Pulse Aduio CMD
+alias listAudioOut='pactl list short sinks'
+setAudioOut(){ pactl set-default-sink "$1"; }
+
+alias listAudioIn='pactl list short sources'
+setAudioIn(){ pactl set-default-source "$1"; }
+
+# https://rastating.github.io/setting-default-audio-device-in-ubuntu-18-04/
+###################################################################################################################
 
 alias dbash='docker-compose exec app bash'
 alias dbashr='docker-compose exec app bash'
@@ -135,6 +145,7 @@ dbehatfile(){ dbash -c "php vendor/bin/behat --format=pretty --format=progress -
 dbehattag(){ dbash -c "php vendor/bin/behat --format=progress --colors --no-interaction --verbose=2 --stop-on-failure --tags='$1'"; }
 dbehattagp(){ dbash -c "php vendor/bin/behat --format=progress --format=pretty --colors --no-interaction --verbose=2 --stop-on-failure --tags='$1'"; }
 
+###########################################################################################
 # Codeception
 alias codecept='vendor/bin/codecept'
 
@@ -144,10 +155,40 @@ dwcodecept(){ dbashw -c "php vendor/bin/codecept $1"; }
 # docker codeception run legacy
 dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps" }
 dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug" }
-dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report" }
+dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html" }
+
+
 
 dccag(){ dcodecept "run acceptance -g $1"; }
 
+###########################################################################################
+# PHP inspection tools in docker
+alias phploc='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest \
+php /usr/local/lib/php-code-quality/vendor/bin/phploc -v --names "*.php" \
+--exclude "vendor" . > ./doc/phploc.txt'
+
+alias phpmd='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest \
+php /usr/local/lib/php-code-quality/vendor/bin/phpmd . xml codesize --exclude 'vendor' \
+--reportfile "./doc/phpmd_results.xml"'
+
+alias phpmetrics='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest \
+php /usr/local/lib/php-code-quality/vendor/bin/phpmetrics --excluded-dirs 'vendor' \
+--report-html=./doc/metrics_results .'
+
+alias phpdepends='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest \
+php /usr/local/lib/php-code-quality/vendor/bin/pdepend --ignore="vendor" \
+--summary-xml="./doc/pdepend_output.xml" \
+--jdepend-chart="./doc/pdepend_chart.svg" \
+--overview-pyramid="./doc/pdepend_pyramid.svg"'
+
+
+alias phpcomp='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest sh -c \
+'php /usr/local/lib/php-code-quality/vendor/bin/phpcs -sv --config-set installed_paths  /usr/local/lib/php-code-quality/vendor/phpcompatibility/php-compatibility && \
+php /usr/local/lib/php-code-quality/vendor/bin/phpcs -sv --standard='PHPCompatibility' --extensions=php --ignore=vendor . \
+--report-file=./php_code_quality/phpcompatibility_results.txt .''
+
+
+###########################################################################################
 dpunitname(){ dbash -c "php vendor/bin/phpunit $1"; }
 dpunitfilter(){ dbash -c "php vendor/bin/phpunit --filter $1 $2"; }
 dpunitgroup(){ dbash -c "php vendor/bin/phpunit --group $1"; }
@@ -158,8 +199,9 @@ dpart(){ dbash -c "php artisan $1"; }
 down(){ dbash -c "chown -R 1000:www-data $1"; }
 
 
-alias dhosts='sudo php /media/robert/linux-dev/projects/infoxchange/docker-hosts.php'
-alias dhostsl='sudo php /media/robert/linux-dev/projects/infoxchange/docker-hosts-log-errors.php'
+alias dhosts='sudo php $MRWILDE_PROJ/infoxchange/docker-hosts.php'
+alias dhostsl='sudo php $MRWILDE_PROJ/infoxchange/docker-hosts-log-errors.php'
+dashit(){ bash $MRWILDE_PROJ/infoxchange/dashit $1 $2 $3; }
 
 alias gitclean='git branch -d $(git branch --merged=develop | grep -v develop)'
 alias prettyg="git log --graph --pretty=oneline --abbrev-commit"

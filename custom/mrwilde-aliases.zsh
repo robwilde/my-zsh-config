@@ -23,7 +23,7 @@ ex ()
   fi
 }
 
-export EDITOR=nano
+export EDITOR=vim
 
 alias pacman-update='sudo pacman-mirrors --geoip'
 
@@ -40,6 +40,7 @@ alias lS='ls -1FSsh --color=auto'
 alias lart='ls -1Fcart --color=auto'
 alias lrt='ls -1Fcrt --color=auto'
 
+alias eda='${=EDITOR} ~/.oh-my-zsh/custom/mrwilde-aliases.zsh' # quick access to my alias
 alias zshrc='${=EDITOR} ~/.zshrc' # Quick access to the ~/.zshrc file
 alias reload=". ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
 
@@ -122,10 +123,23 @@ dnpm(){ dbashc "npm $1"; }
 dnpmr(){ dnpm "run $1"; }
 dnmpa(){ dbashac "npm $1"; }
 
+################################################################################################################
+# Docker
 alias ddown='docker-compose down --remove-orphans'
 alias ddownv='docker-compose down --remove-orphans --volumes'
-alias dcu='docker-compose up -d'
 alias dcr='docker-compose run'
+alias dcu='docker-compose up -d'
+
+dcut(){
+     #!/bin/bash
+     if [ "$#" -eq  "0" ]
+       then
+         echo "No tag supplied";
+     else
+        "export SRSDEVTAG=$1";
+        "docker-compose up -d";
+     fi
+}
 
 dcompupdate(){
      #!/bin/bash
@@ -207,6 +221,7 @@ alias gitclean='git branch -d $(git branch --merged=develop | grep -v develop)'
 alias prettyg="git log --graph --pretty=oneline --abbrev-commit"
 
 gitref(){ git reflog --date=iso | grep "HEAD@{$1"; }
+
 
 git-standup() {
     AUTHOR=${AUTHOR:="`git config user.name`"}

@@ -130,14 +130,25 @@ alias ddownv='docker-compose down --remove-orphans --volumes'
 alias dcr='docker-compose run'
 alias dcu='docker-compose up -d'
 
-dcut(){
+dbuildt(){
      #!/bin/bash
      if [ "$#" -eq  "0" ]
        then
-         echo "No tag supplied";
+         echo "No arguments supplied";
      else
-        "export SRSDEVTAG=$1";
-        "docker-compose up -d";
+        sudo chown -R robert:www-data webwrite;
+        docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 .;
+     fi
+}
+
+dbuildtf(){
+     #!/bin/bash
+     if [ "$#" -eq  "0" ]
+       then
+         echo "No arguments supplied";
+     else
+        sudo chown -R robert:www-data webwrite;
+        docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 -f $2 .;
      fi
 }
 
@@ -166,14 +177,15 @@ alias codecept='vendor/bin/codecept'
 alias dccb='dbash -c "php vendor/bin/codecept build"'
 dcodecept(){ dbash -c "php vendor/bin/codecept $1"; }
 dwcodecept(){ dbashw -c "php vendor/bin/codecept $1"; }
+
+######################################################################
 # docker codeception run legacy
 dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps" }
 dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug" }
 dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html" }
 
-
-
-dccag(){ dcodecept "run acceptance -g $1"; }
+dcca(){ dbash -c "php vendor/bin/codecept run Acceptance $1 --steps" }
+dccad(){ dbash -c "php vendor/bin/codecept run Acceptance $1 --steps --debug" }
 
 ###########################################################################################
 # PHP inspection tools in docker

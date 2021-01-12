@@ -81,6 +81,10 @@ alias mv='mv -i'
 
 alias diskusage='ncdu'
 
+##############################################
+# Lando bits
+alias llapp='lando ssh -c "composer global require laravel/installer && laravel new app"'
+
 ###################################################################################################################
 # Audio Device Settings - Pulse Aduio CMD
 alias listAudioOut='pactl list short sinks'
@@ -184,8 +188,9 @@ dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps" }
 dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug" }
 dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html" }
 
-dcca(){ dbash -c "php vendor/bin/codecept run Acceptance $1 --steps" }
-dccad(){ dbash -c "php vendor/bin/codecept run Acceptance $1 --steps --debug" }
+dcca(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f $1" }
+dccad(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f $1" }                                           
+dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1" }
 
 ###########################################################################################
 # PHP inspection tools in docker
@@ -207,11 +212,8 @@ php /usr/local/lib/php-code-quality/vendor/bin/pdepend --ignore="vendor" \
 --jdepend-chart="./doc/pdepend_chart.svg" \
 --overview-pyramid="./doc/pdepend_pyramid.svg"'
 
-
-alias phpcomp='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest sh -c \
-'php /usr/local/lib/php-code-quality/vendor/bin/phpcs -sv --config-set installed_paths  /usr/local/lib/php-code-quality/vendor/phpcompatibility/php-compatibility && \
-php /usr/local/lib/php-code-quality/vendor/bin/phpcs -sv --standard='PHPCompatibility' --extensions=php --ignore=vendor . \
---report-file=./php_code_quality/phpcompatibility_results.txt .''
+alias phpcomp='docker run --rm -it --init -v "$PWD:$PWD" -w "$PWD" tophfr/phpcompatibility -p \
+  --ignore=vendor,node_modules --report=json --report-file=./phpcompatibility_results.json --runtime-set testVersion 7.3 .'
 
 
 ###########################################################################################
@@ -233,7 +235,6 @@ alias gitclean='git branch -d $(git branch --merged=develop | grep -v develop)'
 alias prettyg="git log --graph --pretty=oneline --abbrev-commit"
 
 gitref(){ git reflog --date=iso | grep "HEAD@{$1"; }
-
 
 git-standup() {
     AUTHOR=${AUTHOR:="`git config user.name`"}

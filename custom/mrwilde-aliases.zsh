@@ -188,9 +188,9 @@ dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps" }
 dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug" }
 dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html" }
 
-dcca(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f $1" }
-dccad(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f $1" }                                           
-dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1" }
+dcca(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f tests/Acceptance/features/$1" }
+dccad(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Acceptance/features/$1" }                                           
+dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g tests/Acceptance/features/$1" }
 
 ###########################################################################################
 # PHP inspection tools in docker

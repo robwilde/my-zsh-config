@@ -109,6 +109,7 @@ alias dcomposer='dbash -c "composer install"'
 alias dcompucheck='dbash -c "composer show -l"'
 alias dcd='dbash -c "composer dump-autoload"'
 alias dcv='dbash -c "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
+dcompreq(){ dbashc "composer require $1"; }
 
 alias dgw='dbash -c "gulp watch"'
 alias dtinker='dbash -c "php artisan tinker"'

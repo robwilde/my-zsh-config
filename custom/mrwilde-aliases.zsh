@@ -117,8 +117,6 @@ alias dclean='dbash -c "php artisan cache:clear && php artisan db:clean-seed && 
 alias dclean-seed='dbash -c "php artisan db:clean-seed"'
 alias dseed='dpart db:seed'
 
-alias dphpunit='dbash -c "php vendor/bin/phpunit"'
-
 phpDoc(){ php /usr/local/bin/phpDocumentor.phar $1; }
 
 ytmp3(){ youtube-dl -x --audio-format mp3 $1; }
@@ -218,6 +216,7 @@ alias phpcomp='docker run --rm -it --init -v "$PWD:$PWD" -w "$PWD" tophfr/phpcom
 
 
 ###########################################################################################
+alias dphpunit='dbash -c "php vendor/bin/phpunit"'
 dpunitname(){ dbash -c "php vendor/bin/phpunit $1"; }
 dpunitfilter(){ dbash -c "php vendor/bin/phpunit --filter $1 $2"; }
 dpunitgroup(){ dbash -c "php vendor/bin/phpunit --group $1"; }

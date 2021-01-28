@@ -110,6 +110,7 @@ alias dcompucheck='dbash -c "composer show -l"'
 alias dcd='dbash -c "composer dump-autoload"'
 alias dcv='dbash -c "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
 dcompreq(){ dbashc "composer require $1"; }
+dcompreqd(){ dbashc "composer require $1 --dev"; }
 
 alias dgw='dbash -c "gulp watch"'
 alias dtinker='dbash -c "php artisan tinker"'
@@ -227,8 +228,8 @@ dpart(){ dbash -c "php artisan $1"; }
 down(){ dbash -c "chown -R 1000:www-data $1"; }
 
 
-alias dhosts='sudo php $MRWILDE_PROJ/infoxchange/docker-hosts.php'
-alias dhostsl='sudo php $MRWILDE_PROJ/infoxchange/docker-hosts-log-errors.php'
+alias dhosts='sudo php $MRWILDE_PROJ/docker-hosts.php'
+alias dhostsl='sudo php $MRWILDE_PROJ/docker-hosts-log-errors.php'
 dashit(){ bash $MRWILDE_PROJ/infoxchange/dashit $1 $2 $3; }
 
 alias gitclean='git branch -d $(git branch --merged=develop | grep -v develop)'

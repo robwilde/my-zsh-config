@@ -230,7 +230,7 @@ down(){ dbash -c "chown -R 1000:www-data $1"; }
 
 alias dhosts='sudo php $MRWILDE_PROJ/docker-hosts.php'
 alias dhostsl='sudo php $MRWILDE_PROJ/docker-hosts-log-errors.php'
-dashit(){ bash $MRWILDE_PROJ/infoxchange/dashit $1 $2 $3; }
+dashit(){ bash $MRWILDE_PROJ/dashit $1 $2 $3; }
 
 alias gitclean='git branch -d $(git branch --merged=develop | grep -v develop)'
 alias prettyg="git log --graph --pretty=oneline --abbrev-commit"

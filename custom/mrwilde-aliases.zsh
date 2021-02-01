@@ -51,6 +51,7 @@ alias t='tail -f'
 
 alias webcamset='bash /home/robert/webcam-output.sh'
 
+###################################################################################################################
 # Command line head / tail shortcuts
 alias -g H='| head'
 alias -g T='| tail'
@@ -98,7 +99,7 @@ ytmp3(){ youtube-dl -x --audio-format mp3 $1; }
 
 # https://rastating.github.io/setting-default-audio-device-in-ubuntu-18-04/
 ###################################################################################################################
-
+# Docker-Compose
 alias dbash='docker-compose exec app bash'
 alias dbashr='docker-compose exec app bash'
 alias dbashw='docker-compose exec --user www-data app bash'
@@ -108,6 +109,8 @@ dbashc(){ dbash -c "$1"; }
 dbashrc(){ dbashr -c "$1"; }
 dbashac(){ dbashr -c "$1"; }
 
+###################################################################################################################
+# Composer
 alias dcomposer='dbashc "composer install"'
 alias dcompucheck='dbashc "composer show -l"'
 alias dcompil='dbashc "composer update --lock"'
@@ -115,13 +118,15 @@ alias dcd='dbashc "composer dump-autoload"'
 alias dcv='dbashc "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
 dcompreq(){ dbashc "composer require $1"; }
 
+###################################################################################################################
+# Artisan
 alias dtinker='dbash -c "php artisan tinker"'
 alias dclean='dbash -c "php artisan cache:clear && php artisan db:clean-seed && php artisan db:seed"'
 alias dclean-seed='dbash -c "php artisan db:clean-seed"'
 alias dseed='dpart db:seed'
 
-phpDoc(){ php /usr/local/bin/phpDocumentor.phar $1; }
-
+###################################################################################################################
+# NPM
 dnpm(){ dbashc "npm $1"; }
 dnpmr(){ dnpm "run $1"; }
 dnmpa(){ dbashac "npm $1"; }
@@ -166,12 +171,6 @@ dcompupdate(){
 }
 
 alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
-
-alias dbehat='dbash -c "php vendor/bin/behat --format=progress --colors --no-interaction --verbose=2 --stop-on-failure"'
-dbehatname(){ dbash -c "php vendor/bin/behat --format=pretty --colors --no-interaction --verbose=2 --stop-on-failure --name='$1' $2"; }
-dbehatfile(){ dbash -c "php vendor/bin/behat --format=pretty --format=progress --colors --no-interaction --verbose=2 --stop-on-failure $1"; }
-dbehattag(){ dbash -c "php vendor/bin/behat --format=progress --colors --no-interaction --verbose=2 --stop-on-failure --tags='$1'"; }
-dbehattagp(){ dbash -c "php vendor/bin/behat --format=progress --format=pretty --colors --no-interaction --verbose=2 --stop-on-failure --tags='$1'"; }
 
 ###########################################################################################
 # Codeception

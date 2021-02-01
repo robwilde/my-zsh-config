@@ -93,6 +93,9 @@ setAudioOut(){ pactl set-default-sink "$1"; }
 alias listAudioIn='pactl list short sources'
 setAudioIn(){ pactl set-default-source "$1"; }
 
+# Download youtube as mps for audio
+ytmp3(){ youtube-dl -x --audio-format mp3 $1; }
+
 # https://rastating.github.io/setting-default-audio-device-in-ubuntu-18-04/
 ###################################################################################################################
 
@@ -105,13 +108,13 @@ dbashc(){ dbash -c "$1"; }
 dbashrc(){ dbashr -c "$1"; }
 dbashac(){ dbashr -c "$1"; }
 
-alias dcomposer='dbash -c "composer install"'
-alias dcompucheck='dbash -c "composer show -l"'
-alias dcd='dbash -c "composer dump-autoload"'
-alias dcv='dbash -c "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
+alias dcomposer='dbashc "composer install"'
+alias dcompucheck='dbashc "composer show -l"'
+alias dcompil='dbashc "composer update --lock"'
+alias dcd='dbashc "composer dump-autoload"'
+alias dcv='dbashc "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
 dcompreq(){ dbashc "composer require $1"; }
 
-alias dgw='dbash -c "gulp watch"'
 alias dtinker='dbash -c "php artisan tinker"'
 alias dclean='dbash -c "php artisan cache:clear && php artisan db:clean-seed && php artisan db:seed"'
 alias dclean-seed='dbash -c "php artisan db:clean-seed"'
@@ -119,9 +122,6 @@ alias dseed='dpart db:seed'
 
 phpDoc(){ php /usr/local/bin/phpDocumentor.phar $1; }
 
-ytmp3(){ youtube-dl -x --audio-format mp3 $1; }
-
-alias cnpm='sudo rm -rf node_modules bower_components'
 dnpm(){ dbashc "npm $1"; }
 dnpmr(){ dnpm "run $1"; }
 dnmpa(){ dbashac "npm $1"; }

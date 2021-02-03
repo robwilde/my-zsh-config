@@ -119,7 +119,7 @@ alias dcv='dbashc "composer validate --no-interaction --ansi --verbose --no-chec
 dcompreq(){ dbashc "composer require $1"; }
 dcompreqd(){ dbashc "composer require $1 --dev"; }
 
-dcomprem(){ dbashc "composer remove $1"; }
+dcomprem(){ dbashc "composer remove $1 --update-with-dependencies"; }
 
 dcompupdate(){
      #!/bin/bash
@@ -127,7 +127,7 @@ dcompupdate(){
        then
          echo "No arguments supplied";
      else
-        dbash -c "composer update $1";
+        dbash -c "composer update $1 --with-all-dependencies --prefer-stable";
      fi
 }
 
@@ -228,7 +228,6 @@ dpart(){ dbash -c "php artisan $1"; }
 
 # File permissions
 down(){ dbash -c "chown -R 1000:www-data $1"; }
-
 
 alias dhosts='sudo php $MRWILDE_PROJ/docker-hosts.php'
 alias dhostsl='sudo php $MRWILDE_PROJ/docker-hosts-log-errors.php'

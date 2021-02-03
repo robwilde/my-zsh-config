@@ -119,6 +119,18 @@ alias dcv='dbashc "composer validate --no-interaction --ansi --verbose --no-chec
 dcompreq(){ dbashc "composer require $1"; }
 dcompreqd(){ dbashc "composer require $1 --dev"; }
 
+dcomprem(){ dbashc "composer remove $1"; }
+
+dcompupdate(){
+     #!/bin/bash
+     if [ "$#" -eq  "0" ]
+       then
+         echo "No arguments supplied";
+     else
+        dbash -c "composer update $1";
+     fi
+}
+
 ###################################################################################################################
 # Artisan
 alias dtinker='dbash -c "php artisan tinker"'
@@ -161,15 +173,6 @@ dbuildtf(){
      fi
 }
 
-dcompupdate(){
-     #!/bin/bash
-     if [ "$#" -eq  "0" ]
-       then
-         echo "No arguments supplied";
-     else
-        dbash -c "composer update $1";
-     fi
-}
 
 alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
 

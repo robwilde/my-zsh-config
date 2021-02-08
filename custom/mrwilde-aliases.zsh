@@ -184,8 +184,6 @@ alias dccb='dbash -c "php vendor/bin/codecept build"'
 dcodecept(){ dbash -c "php vendor/bin/codecept $1"; }
 dwcodecept(){ dbashw -c "php vendor/bin/codecept $1"; }
 
-######################################################################
-# docker codeception run legacy
 dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps" }
 dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug" }
 dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html" }

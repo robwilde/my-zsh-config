@@ -114,7 +114,7 @@ dbashac(){ dbashr -c "$1"; }
 alias dcomposer='dbashc "composer install"'
 alias dcompucheck='dbashc "composer show -l"'
 alias dcompul='dbashc "composer update --lock"'
-alias dcd='dbashc "composer dump-autoload"'
+alias dcompdump='dbashc "composer dump-autoload"'
 alias dcv='dbashc "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
 dcompreq(){ dbashc "composer require $1"; }
 dcompreqd(){ dbashc "composer require $1 --dev"; }

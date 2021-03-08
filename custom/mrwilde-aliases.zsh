@@ -158,7 +158,7 @@ dbuildt(){
          echo "No arguments supplied";
      else
         sudo chown -R robert:www-data webwrite;
-        DOCKER_BUILDKIT=1 docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 .;
+        DOCKER_BUILDKIT=1 docker build --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 .;
      fi
 }
 
@@ -169,7 +169,7 @@ dbuildtf(){
          echo "No arguments supplied";
      else
         sudo chown -R robert:www-data webwrite;
-        DOCKER_BUILDKIT=1 docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 -f $2 .;
+        DOCKER_BUILDKIT=1 docker build --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 -f $2 .;
      fi
 }
 

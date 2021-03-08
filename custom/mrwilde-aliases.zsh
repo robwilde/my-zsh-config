@@ -158,7 +158,7 @@ dbuildt(){
          echo "No arguments supplied";
      else
         sudo chown -R robert:www-data webwrite;
-        docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 .;
+        DOCKER_BUILDKIT=1 docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 .;
      fi
 }
 
@@ -169,7 +169,7 @@ dbuildtf(){
          echo "No arguments supplied";
      else
         sudo chown -R robert:www-data webwrite;
-        docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 -f $2 .;
+        DOCKER_BUILDKIT=1 docker build --no-cache --add-host=proxy:10.51.60.20 -t infoxchange/srs:$1 -f $2 .;
      fi
 }
 
@@ -223,6 +223,8 @@ dpunitfilter(){ dbash -c "php vendor/bin/phpunit --filter $1 $2"; }
 dpunitgroup(){ dbash -c "php vendor/bin/phpunit --group $1"; }
 
 dpart(){ dbash -c "php artisan $1"; }
+
+alias hostips="ip addr show |grep 'inet '|grep -v 127.0.0.1 |awk '{print $2}'| cut -d/ -f1"
 
 # File permissions
 down(){ dbash -c "chown -R 1000:www-data $1"; }

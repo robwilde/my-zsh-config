@@ -116,6 +116,7 @@ alias dcompucheck='dbashc "composer show -l"'
 alias dcompul='dbashc "composer update --lock"'
 alias dcompdump='dbashc "composer dump-autoload"'
 alias dcv='dbashc "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
+alias dcompdiag='dbashc "composer diagnose --no-interaction --ansi --verbose"'
 dcompreq(){ dbashc "composer require $1"; }
 dcompreqd(){ dbashc "composer require $1 --dev"; }
 

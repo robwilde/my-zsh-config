@@ -86,6 +86,16 @@ alias diskusage='ncdu'
 # Lando bits
 alias llapp='lando ssh -c "composer global require laravel/installer && laravel new app"'
 
+llaravel(){
+     #!/bin/bash
+     if [ "$#" -eq  "0" ]
+       then
+         lando ssh -c "composer global require laravel/installer && laravel new app";
+     else
+          lando ssh -c "composer global require laravel/installer && laravel new $1";
+     fi
+}
+
 ###################################################################################################################
 # Audio Device Settings - Pulse Aduio CMD
 alias listAudioOut='pactl list short sinks'

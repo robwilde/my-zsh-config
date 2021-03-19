@@ -96,6 +96,16 @@ llaravel(){
      fi
 }
 
+laracomp(){ 
+       #!/bin/bash
+     if [ "$2" -eq  "0" ]
+       then
+         composer create-project --prefer-dist laravel/laravel $1;
+     else
+          composer create-project --prefer-dist laravel/laravel $1 $2;
+     fi
+}
+
 ###################################################################################################################
 # Audio Device Settings - Pulse Aduio CMD
 alias listAudioOut='pactl list short sinks'

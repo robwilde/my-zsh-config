@@ -176,7 +176,7 @@ dcu(){
 
   DIR=$(pwd);
   FILE="/.env";
-  LAPTOP_IP=$(hostname -I | awk '{print $1}');
+  LAPTOP_IP=$(hostname -I | awk '{print $NF}');
   HOST_IP="HOST_IP=$LAPTOP_IP";
   echo "$HOST_IP";
   sed -i "s/HOST_IP=[^\"]*/$HOST_IP/" "$DIR$FILE";

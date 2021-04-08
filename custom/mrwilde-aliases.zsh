@@ -170,10 +170,22 @@ dnmpa(){ dbashac "npm $1"; }
 alias ddown='docker-compose down --remove-orphans'
 alias ddownv='docker-compose down --remove-orphans --volumes'
 alias dcr='docker-compose run'
-alias dcu='docker-compose up -d'
+
+dcu(){
+  #!/usr/bin/bash
+
+  DIR=$(pwd);
+  FILE="/.env";
+  LAPTOP_IP=$(hostname -I | awk '{print $1}');
+  HOST_IP="HOST_IP=$LAPTOP_IP";
+  echo "$HOST_IP";
+  sed -i "s/HOST_IP=[^\"]*/$HOST_IP/" "$DIR$FILE";
+
+  docker-compose up -d;
+}
 
 dbuildt(){
-     #!/bin/bash
+    #!/usr/bin/bash
      if [ "$#" -eq  "0" ]
        then
          echo "No arguments supplied";
@@ -184,7 +196,7 @@ dbuildt(){
 }
 
 dbuildtf(){
-     #!/bin/bash
+    #!/usr/bin/bash
      if [ "$#" -eq  "0" ]
        then
          echo "No arguments supplied";
@@ -201,17 +213,30 @@ alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock 
 # Codeception
 alias codecept='vendor/bin/codecept'
 
-alias dccb='dbash -c "php vendor/bin/codecept build"'
 dcodecept(){ dbash -c "php vendor/bin/codecept $1"; }
+alias dccb='dcodecept build'
+alias dcccl='dcodecept clean'
 dwcodecept(){ dbashw -c "php vendor/bin/codecept $1"; }
 
-dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps" }
-dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug" }
-dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html" }
+# Legacy testing
+dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps"; }
+dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug"; }
+dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html"; }
 
-dcca(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f tests/Acceptance/features/$1" }
-dccad(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Acceptance/features/$1" }                                           
-dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1" }
+# Unit Testing
+dccu(){ dbash -c "php vendor/bin/codecept run Unit $1 --steps"; }
+dccud(){ dbash -c "php vendor/bin/codecept run Unit $1 --steps --debug"; }
+dccur(){ dbash -c "php vendor/bin/codecept run Unit $1 --steps --report --html"; }
+
+# behat feature tests
+dccaf(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f tests/Acceptance/features/$1"; }
+dccafd(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Acceptance/features/$1"; }
+
+# Codeception feature tests
+dcca(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f tests/Acceptance/$1"; }
+dccad(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Acceptance/$1"; }
+
+dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1"; }
 
 ###########################################################################################
 # PHP inspection tools in docker
@@ -234,7 +259,7 @@ php /usr/local/lib/php-code-quality/vendor/bin/pdepend --ignore="vendor" \
 --overview-pyramid="./doc/pdepend_pyramid.svg"'
 
 alias phpcomp='docker run --rm -it --init -v "$PWD:$PWD" -w "$PWD" tophfr/phpcompatibility -p \
-  --ignore=vendor,node_modules --report=json --report-file=./phpcompatibility_results.json --runtime-set testVersion 7.3 .'
+  --ignore=vendor,node_modules --report=json --report-file=./phpcompatibility_results.json --runtime-set testVersion 7. .'
 
 
 ###########################################################################################

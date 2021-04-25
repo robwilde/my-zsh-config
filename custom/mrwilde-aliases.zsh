@@ -23,7 +23,9 @@ ex ()
   fi
 }
 
+# Export additions
 export EDITOR=vim
+export PATH=$PATH:/home/robert/Projects/scripts
 
 alias pacman-update='sudo pacman-mirrors --geoip'
 
@@ -176,7 +178,7 @@ dcu(){
 
   DIR=$(pwd);
   FILE="/.env";
-  LAPTOP_IP=$(hostname -I | awk '{print $NF}');
+  LAPTOP_IP=$(hostname -I | awk '{print $1}');
   HOST_IP="HOST_IP=$LAPTOP_IP";
   echo "$HOST_IP";
   sed -i "s/HOST_IP=[^\"]*/$HOST_IP/" "$DIR$FILE";
@@ -266,6 +268,7 @@ alias phpcomp='docker run --rm -it --init -v "$PWD:$PWD" -w "$PWD" tophfr/phpcom
 alias dphpunit='dbash -c "php vendor/bin/phpunit"'
 
 dpunitname(){ dbash -c "php vendor/bin/phpunit $1"; }
+# phpunit --filter methodName path/to/file.php
 dpunitfilter(){ dbash -c "php vendor/bin/phpunit --filter $1 $2"; }
 dpunitgroup(){ dbash -c "php vendor/bin/phpunit --group $1"; }
 

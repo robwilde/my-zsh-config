@@ -171,12 +171,14 @@ dnmpa(){ dbashac "npm $1"; }
 
 ###################################################################################################################
 # YARN
-dyrn(){ dbashc "yarn $@"; }
+darn(){ dbash -c "yarn"; }
+
+alias darnb='dbashc "NODE_OPTIONS=--max_old_space_size=4096 yarn build"'
 
 ###################################################################################################################
 # Symfony
 
-dcon(){ dbashc "php bin/console $@"; }
+dcon(){ dbash -c "php bin/console $@"; }
 
 ################################################################################################################
 # Docker
@@ -274,7 +276,7 @@ php /usr/local/lib/php-code-quality/vendor/bin/pdepend --ignore="vendor" \
 alias phpcomp='docker run --rm -it --init -v "$PWD:$PWD" -w "$PWD" tophfr/phpcompatibility -p \
   --ignore=vendor,node_modules --report=json --report-file=./phpcompatibility_results.json --runtime-set testVersion 7. .'
 
-
+alias phpstan='docker run -v $PWD:/app --rm ghcr.io/phpstan/phpstan'
 ###########################################################################################
 alias dphpunit='dbash -c "php vendor/bin/phpunit"'
 

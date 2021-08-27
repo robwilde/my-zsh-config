@@ -122,10 +122,10 @@ ytmp3(){ youtube-dl -x --audio-format mp3 $1; }
 # https://rastating.github.io/setting-default-audio-device-in-ubuntu-18-04/
 ###################################################################################################################
 # Docker-Compose
-alias dbash='docker-compose exec app bash'
-alias dbashr='docker-compose exec app bash'
-alias dbashw='docker-compose exec --user www-data app bash'
-alias dbasha='docker-compose exec --user app app bash'
+alias dbash='docker-compose exec dms_web_local bash'
+alias dbashr='docker-compose exec dms_web_local bash'
+alias dbashw='docker-compose exec --user www-data dms_web_local bash'
+alias dbasha='docker-compose exec --user dms_web_local dms_web_local bash'
 
 dbashc(){ dbash -c "$1"; }
 dbashrc(){ dbashr -c "$1"; }
@@ -133,16 +133,18 @@ dbashac(){ dbashr -c "$1"; }
 
 ###################################################################################################################
 # Composer
-alias dcomposer='dbashc "composer install"'
-alias dcompucheck='dbashc "composer show -l"'
-alias dcompul='dbashc "composer update --lock"'
-alias dcompdump='dbashc "composer dump-autoload"'
-alias dcv='dbashc "composer validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
-alias dcompdiag='dbashc "composer diagnose --no-interaction --ansi --verbose"'
-dcompreq(){ dbashc "composer require $1"; }
-dcompreqd(){ dbashc "composer require $1 --dev"; }
+alias dcomposer='dbashc "php composer.phar"'
+alias dcompucheck='dbashc "php composer.phar show -l"'
+alias dcompul='dbashc "php composer.phar update --lock"'
+alias dcompdump='dbashc "php composer.phar dump-autoload"'
+alias dcv='dbashc "php composer.phar validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
+alias dcompdiag='dbashc "php composer.phar diagnose --no-interaction --ansi --verbose"'
+dcompreq(){ dbashc "php composer.phar require $1"; }
+dcompreqd(){ dbashc "php composer.phar require $1 --dev"; }
 
-dcomprem(){ dbashc "composer remove $1 --update-with-dependencies"; }
+dcomprem(){ dcomposer "remove $1 --update-with-dependencies"; }
+
+dcompin(){ dbashc "php composer.phar install $@"; }
 
 dcompupdate(){
      #!/bin/bash
@@ -150,7 +152,7 @@ dcompupdate(){
        then
          echo "No arguments supplied";
      else
-        dbash -c "composer update $1 --with-all-dependencies --prefer-stable";
+        dbash -c "php composer.phar update $1 --with-all-dependencies --prefer-stable";
      fi
 }
 
@@ -166,6 +168,15 @@ alias dseed='dpart db:seed'
 dnpm(){ dbashc "npm $1"; }
 dnpmr(){ dnpm "run $1"; }
 dnmpa(){ dbashac "npm $1"; }
+
+###################################################################################################################
+# YARN
+dyrn(){ dbashc "yarn $@"; }
+
+###################################################################################################################
+# Symfony
+
+dcon(){ dbashc "php bin/console $@"; }
 
 ################################################################################################################
 # Docker

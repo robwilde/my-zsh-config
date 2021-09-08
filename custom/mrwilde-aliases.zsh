@@ -155,6 +155,18 @@ dcompupdate(){
         dbash -c "php composer.phar update $1 --with-all-dependencies --prefer-stable";
      fi
 }
+###################################################################################################################
+# DMS
+
+# Required to complete the DMS Instatll
+# php composer.phar install --no-interaction
+
+# cd /srv/www/redeye-dms
+# yarn
+# yarn build
+# cd /srv/www/redeye-dms/vue
+# yarn
+# yarn build
 
 ###################################################################################################################
 # Artisan
@@ -171,9 +183,9 @@ dnmpa(){ dbashac "npm $1"; }
 
 ###################################################################################################################
 # YARN
-darn(){ dbash -c "yarn"; }
+alias darnb='dbashc "NODE_OPTIONS=--max_old_space_size=4096"'
 
-alias darnb='dbashc "NODE_OPTIONS=--max_old_space_size=4096 yarn build"'
+darn(){ darnb "yarn $@"; }
 
 ###################################################################################################################
 # Symfony

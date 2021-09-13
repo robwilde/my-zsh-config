@@ -144,6 +144,8 @@ dcompreqd(){ dbashc "php composer.phar require $1 --dev"; }
 
 dcomprem(){ dcomposer "remove $1 --update-with-dependencies"; }
 
+dcomp(){ dbashc "php composer.phar $@"; }
+
 dcompin(){ dbashc "php composer.phar install $@"; }
 
 dcompupdate(){
@@ -168,6 +170,13 @@ dcompupdate(){
 # yarn
 # yarn build
 
+# cd /srv/www/redeye-dms
+# php bin/console cache:clear --env=dev
+# ainst
+
+
+# SQL for Admin Rights
+# UPDATE User SET roles = 'a:3:{i:0;s:10:"ROLE_EARLY";i:1;s:16:"ROLE_SUPER_ADMIN";i:2;s:10:"ROLE_ADMIN";}' WHERE id = 7871;
 ###################################################################################################################
 # Artisan
 alias dtinker='dbash -c "php artisan tinker"'

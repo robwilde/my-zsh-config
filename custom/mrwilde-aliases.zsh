@@ -122,9 +122,9 @@ ytmp3(){ youtube-dl -x --audio-format mp3 $1; }
 # https://rastating.github.io/setting-default-audio-device-in-ubuntu-18-04/
 ###################################################################################################################
 # Docker-Compose
-alias dbash='docker-compose exec dms_web_local bash'
+# alias dbash='docker-compose exec dms_web_local bash'
 alias dbashr='docker-compose exec dms_web_local bash'
-alias dbashw='docker-compose exec --user www-data dms_web_local bash'
+alias dbash='docker-compose exec --user 1000:www-data dms_web_local bash'
 alias dbasha='docker-compose exec --user dms_web_local dms_web_local bash'
 
 dbashc(){ dbash -c "$1"; }
@@ -135,16 +135,17 @@ dbashac(){ dbashr -c "$1"; }
 # Composer
 alias dcomposer='dbashc "php composer.phar"'
 alias dcompucheck='dbashc "php composer.phar show -l"'
-alias dcompul='dbashc "php composer.phar update --lock"'
-alias dcompdump='dbashc "php composer.phar dump-autoload"'
-alias dcv='dbashc "php composer.phar validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
-alias dcompdiag='dbashc "php composer.phar diagnose --no-interaction --ansi --verbose"'
-dcompreq(){ dbashc "php composer.phar require $1"; }
-dcompreqd(){ dbashc "php composer.phar require $1 --dev"; }
+alias dcompul='dbashrc "php composer.phar update --lock"'
+alias dcompdump='dbashr -c "php composer.phar dump-autoload"'
+alias dcv='dbashrc "php composer.phar validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
+alias dcompdiag='dbashrc "php composer.phar diagnose --no-interaction --ansi --verbose"'
+dcompreq(){ dbashr -c "php composer.phar require $1"; }
+dcompreqd(){ dbashr -c "php composer.phar require $1 --dev"; }
 
 dcomprem(){ dcomposer "remove $1 --update-with-dependencies"; }
 
 dcomp(){ dbashc "php composer.phar $@"; }
+drcomp(){ dbashrc "php composer.phar $@"; }
 
 dcompin(){ dbashc "php composer.phar install $@"; }
 
@@ -157,6 +158,25 @@ dcompupdate(){
         dbash -c "php composer.phar update $1 --with-all-dependencies --prefer-stable";
      fi
 }
+
+###################################################################################################################
+# Artisan
+alias dtinker='dbash -c "php artisan tinker"'
+alias dclean='dbash -c "php artisan cache:clear && php artisan db:clean-seed && php artisan db:seed"'
+alias dclean-seed='dbash -c "php artisan db:clean-seed"'
+alias dseed='dpart db:seed'
+
+###################################################################################################################
+# NPM
+dnpm(){ dbashc "npm $1"; }
+dnpmr(){ dnpm "run $1"; }
+dnmpa(){ dbashac "npm $1"; }
+
+###################################################################################################################
+# YARN
+alias darnb='dbashc "NODE_OPTIONS=--max_old_space_size=4096"'
+
+darn(){ dbashc "NODE_OPTIONS=--max_old_space_size=4096 yarn $@"; }
 ###################################################################################################################
 # DMS
 
@@ -177,29 +197,23 @@ dcompupdate(){
 
 # SQL for Admin Rights
 # UPDATE User SET roles = 'a:3:{i:0;s:10:"ROLE_EARLY";i:1;s:16:"ROLE_SUPER_ADMIN";i:2;s:10:"ROLE_ADMIN";}' WHERE id = 7871;
-###################################################################################################################
-# Artisan
-alias dtinker='dbash -c "php artisan tinker"'
-alias dclean='dbash -c "php artisan cache:clear && php artisan db:clean-seed && php artisan db:seed"'
-alias dclean-seed='dbash -c "php artisan db:clean-seed"'
-alias dseed='dpart db:seed'
-
-###################################################################################################################
-# NPM
-dnpm(){ dbashc "npm $1"; }
-dnpmr(){ dnpm "run $1"; }
-dnmpa(){ dbashac "npm $1"; }
-
-###################################################################################################################
-# YARN
-alias darnb='dbashc "NODE_OPTIONS=--max_old_space_size=4096"'
-
-darn(){ darnb "yarn $@"; }
 
 ###################################################################################################################
 # Symfony
 
-dcon(){ dbash -c "php bin/console $@"; }
+dcon(){ dbash -c "php bin/console $@ --no-debug"; }
+
+alias dconent='dbash -c "rm -rf app/var/doctrine \
+              && php bin/console doctrine:cache:clear-metadata --no-debug \
+              && php bin/console doctrine:cache:clear-query --no-debug \
+              && php bin/console doctrine:cache:clear-result --no-debug"'
+
+alias clog='truncate -s 0 var/logs/*.log'
+# Symfony Commands
+
+# doctrine:cache:clear-result
+# doctrine:cache:clear-metadata
+# doctrine:cache:clear-query
 
 ################################################################################################################
 # Docker
@@ -217,7 +231,7 @@ dcu(){
   echo "$HOST_IP";
   sed -i "s/HOST_IP=[^\"]*/$HOST_IP/" "$DIR$FILE";
 
-  docker-compose up -d;
+  docker-compose up $@;
 }
 
 dbuildt(){
@@ -242,17 +256,15 @@ dbuildtf(){
      fi
 }
 
-
 alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
 
 ###########################################################################################
 # Codeception
-alias codecept='vendor/bin/codecept'
+alias codecept='dbash -c "bin/codecept run Unit --steps"'
 
-dcodecept(){ dbash -c "php vendor/bin/codecept $1"; }
+dcodecept(){ dbash -c "bin/codecept $@"; }
 alias dccb='dcodecept build'
 alias dcccl='dcodecept clean'
-dwcodecept(){ dbashw -c "php vendor/bin/codecept $1"; }
 
 # Legacy testing
 dccl(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps"; }
@@ -260,9 +272,9 @@ dccld(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --debug"; }
 dcclr(){ dbash -c "php vendor/bin/codecept run Legacy $1 --steps --report --html"; }
 
 # Unit Testing
-dccu(){ dbash -c "php vendor/bin/codecept run Unit $1 --steps"; }
-dccud(){ dbash -c "php vendor/bin/codecept run Unit $1 --steps --debug"; }
-dccur(){ dbash -c "php vendor/bin/codecept run Unit $1 --steps --report --html"; }
+dccu(){ dbash -c "bin/codecept run Unit $1 --steps"; }
+dccud(){ dbash -c "bin/codecept run Unit $1 --steps --debug"; }
+dccur(){ dbash -c "bin/codecept run Unit $1 --steps --report --html"; }
 
 # behat feature tests
 dccaf(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f tests/Acceptance/features/$1"; }
@@ -275,6 +287,24 @@ dccad(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Accep
 dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1"; }
 
 ###########################################################################################
+# PHPUnit
+
+alias dpu='dbash -c "bin/phpunit --testsuite unit --no-coverage"'
+alias dpus='dbash -c "bin/simple-phpunit --stop-on-failure --testsuite unit"'
+
+# dpunit(){ dbash -c "bin/phpunit $@";}
+
+dphpunit(){ dbash -c "bin/phpunit $@"; }
+
+# phpunit --filter methodName path/to/file.php
+dpuf(){ dbash -c "bin/phpunit --filter $1 $2"; }
+dpusf(){ dbash -c "bin/simple-phpunit --filter $@"; }
+dpug(){ dbash -c "bin/phpunit --group $1"; }
+
+alias xon='dbashr -c "phpenmod xdebug; service php7.4-fpm stop; sleep 2; service php7.4-fpm start"'
+alias xoff='dbashr -c "phpdismod xdebug; service php7.4-fpm stop; sleep 2; service php7.4-fpm start"'
+
+###########################################################################################
 # PHP inspection tools in docker
 alias phploc='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest \
 php /usr/local/lib/php-code-quality/vendor/bin/phploc -v --names "*.php" \
@@ -284,9 +314,10 @@ alias phpmd='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-qualit
 php /usr/local/lib/php-code-quality/vendor/bin/phpmd . xml codesize --exclude 'vendor' \
 --reportfile "./doc/phpmd_results.xml"'
 
+# https://www.phpmetrics.org/index.html
 alias phpmetrics='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest \
 php /usr/local/lib/php-code-quality/vendor/bin/phpmetrics --excluded-dirs 'vendor' \
---report-html=./doc/metrics_results .'
+--report-html=./docs/metrics_results .'
 
 alias phpdepends='docker run -it --rm -v "$PWD":/app -w /app adamculp/php-code-quality:latest \
 php /usr/local/lib/php-code-quality/vendor/bin/pdepend --ignore="vendor" \
@@ -299,12 +330,6 @@ alias phpcomp='docker run --rm -it --init -v "$PWD:$PWD" -w "$PWD" tophfr/phpcom
 
 alias phpstan='docker run -v $PWD:/app --rm ghcr.io/phpstan/phpstan'
 ###########################################################################################
-alias dphpunit='dbash -c "php vendor/bin/phpunit"'
-
-dpunitname(){ dbash -c "php vendor/bin/phpunit $1"; }
-# phpunit --filter methodName path/to/file.php
-dpunitfilter(){ dbash -c "php vendor/bin/phpunit --filter $1 $2"; }
-dpunitgroup(){ dbash -c "php vendor/bin/phpunit --group $1"; }
 
 dpart(){ dbash -c "php artisan $1"; }
 

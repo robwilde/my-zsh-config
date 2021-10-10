@@ -215,6 +215,18 @@ alias clog='truncate -s 0 var/logs/*.log'
 # doctrine:cache:clear-metadata
 # doctrine:cache:clear-query
 
+# XDEBUG_CONFIG=profiler_output_name=cachegrind.out.R% XDEUB_MODE=profile docker-compose up
+# xdebug.profiler_output_name=cachegrind.out.R%
+# xdebug.output_dir=/srv/www/redeye-dms/docs/xdebug
+
+alias xon='dbashr -c "phpenmod xdebug; service php7.4-fpm stop; sleep 1; service php7.4-fpm start"'
+alias xoff='dbashr -c "phpdismod xdebug; service php7.4-fpm stop; sleep 1; service php7.4-fpm start"'
+
+alias xonp='dbashr -c "service php7.4-fpm stop \
+                      && sleep 1 \
+                      && echo -n xdebug.profiler_output_name=cachegrind.out.R%
+                      && service php7.4-fpm start"'
+
 ################################################################################################################
 # Docker
 alias ddown='docker-compose down --remove-orphans'
@@ -233,6 +245,8 @@ dcu(){
 
   docker-compose up $@;
 }
+
+alias dcup='XDEBUG_CONFIG=profiler_output_name=cachegrind.out.R% XDEUB_MODE=profile docker-compose up'
 
 dbuildt(){
     #!/usr/bin/bash
@@ -300,9 +314,6 @@ dphpunit(){ dbash -c "bin/phpunit $@"; }
 dpuf(){ dbash -c "bin/phpunit --filter $1 $2"; }
 dpusf(){ dbash -c "bin/simple-phpunit --filter $@"; }
 dpug(){ dbash -c "bin/phpunit --group $1"; }
-
-alias xon='dbashr -c "phpenmod xdebug; service php7.4-fpm stop; sleep 2; service php7.4-fpm start"'
-alias xoff='dbashr -c "phpdismod xdebug; service php7.4-fpm stop; sleep 2; service php7.4-fpm start"'
 
 ###########################################################################################
 # PHP inspection tools in docker

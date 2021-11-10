@@ -89,6 +89,9 @@ alias diskusage='ncdu'
 # nativefier https://rocketlog.app/daily-log --icon /home/robert/Apps/Nativefier/rocketlog/android-chrome-512x512.png --name Rocketlog \
 # --height 1080 --min-width 1920 --single-instance --internal-urls 'https://rocketlog.app/*?'
 
+nativefier https://devhints.io/ --icon /home/robert/Apps/Nativefier/devhints/devhints-icon.jpg --name DevHints \
+--height 1080 --min-width 1920 --single-instance --internal-urls 'https://devhints.io/*?'
+
 ##############################################
 # Lando bits
 alias llapp='lando ssh -c "composer global require laravel/installer && laravel new app"'

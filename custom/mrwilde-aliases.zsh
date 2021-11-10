@@ -52,7 +52,9 @@ alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 alias t='tail -f'
 
 alias webcamset='bash /home/robert/webcam-output.sh'
+alias phpswitch='sudo update-alternatives --config php'
 
+alias sysinfo='inxi -Fxz'
 ###################################################################################################################
 # Command line head / tail shortcuts
 alias -g H='| head'
@@ -83,6 +85,9 @@ alias cp='cp -i'
 alias mv='mv -i'
 
 alias diskusage='ncdu'
+
+# nativefier https://rocketlog.app/daily-log --icon /home/robert/Apps/Nativefier/rocketlog/android-chrome-512x512.png --name Rocketlog \
+# --height 1080 --min-width 1920 --single-instance --internal-urls 'https://rocketlog.app/*?'
 
 ##############################################
 # Lando bits
@@ -133,7 +138,7 @@ dbashac(){ dbashr -c "$1"; }
 
 ###################################################################################################################
 # Composer
-alias dcomposer='dbashc "php composer.phar"'
+alias dcomposer='dbashrc "php composer.phar"'
 alias dcompucheck='dbashc "php composer.phar show -l"'
 alias dcompul='dbashrc "php composer.phar update --lock"'
 alias dcompdump='dbashr -c "php composer.phar dump-autoload"'
@@ -142,12 +147,12 @@ alias dcompdiag='dbashrc "php composer.phar diagnose --no-interaction --ansi --v
 dcompreq(){ dbashr -c "php composer.phar require $1"; }
 dcompreqd(){ dbashr -c "php composer.phar require $1 --dev"; }
 
-dcomprem(){ dcomposer "remove $1 --update-with-dependencies"; }
+dcomprem(){ dbashr -c "php composer.phar remove $@"; }
 
 dcomp(){ dbashc "php composer.phar $@"; }
 drcomp(){ dbashrc "php composer.phar $@"; }
 
-dcompin(){ dbashc "php composer.phar install $@"; }
+dcompin(){ dbashrc "php composer.phar install $@"; }
 
 dcompupdate(){
      #!/bin/bash
@@ -155,7 +160,7 @@ dcompupdate(){
        then
          echo "No arguments supplied";
      else
-        dbash -c "php composer.phar update $1 --with-all-dependencies --prefer-stable";
+        dbashr -c "php composer.phar update $1 --with-all-dependencies --prefer-stable";
      fi
 }
 
@@ -176,7 +181,7 @@ dnmpa(){ dbashac "npm $1"; }
 # YARN
 alias darnb='dbashc "NODE_OPTIONS=--max_old_space_size=4096"'
 
-darn(){ dbashc "NODE_OPTIONS=--max_old_space_size=4096 yarn $@"; }
+darn(){ dbashrc "NODE_OPTIONS=--max_old_space_size=4096 yarn $@"; }
 ###################################################################################################################
 # DMS
 
@@ -192,7 +197,7 @@ darn(){ dbashc "NODE_OPTIONS=--max_old_space_size=4096 yarn $@"; }
 
 # cd /srv/www/redeye-dms
 # php bin/console cache:clear --env=dev
-# ainst
+# php bin/console assets:install (ainst)
 
 
 # SQL for Admin Rights
@@ -201,10 +206,12 @@ darn(){ dbashc "NODE_OPTIONS=--max_old_space_size=4096 yarn $@"; }
 ###################################################################################################################
 # Symfony
 
+alias pcon='php bin/console'
+
+# run in docker container
 dcon(){ dbash -c "php bin/console $@ --no-debug"; }
 
-alias dconent='dbash -c "rm -rf app/var/doctrine \
-              && php bin/console doctrine:cache:clear-metadata --no-debug \
+alias dconent='dbash -c "php bin/console doctrine:cache:clear-metadata --no-debug \
               && php bin/console doctrine:cache:clear-query --no-debug \
               && php bin/console doctrine:cache:clear-result --no-debug"'
 
@@ -243,7 +250,7 @@ dcu(){
   echo "$HOST_IP";
   sed -i "s/HOST_IP=[^\"]*/$HOST_IP/" "$DIR$FILE";
 
-  docker-compose up $@;
+  docker-compose -f docker-compose.override.yml up $@;
 }
 
 alias dcup='XDEBUG_CONFIG=profiler_output_name=cachegrind.out.R% XDEUB_MODE=profile docker-compose up'
@@ -291,12 +298,12 @@ dccud(){ dbash -c "bin/codecept run Unit $1 --steps --debug"; }
 dccur(){ dbash -c "bin/codecept run Unit $1 --steps --report --html"; }
 
 # behat feature tests
-dccaf(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f tests/Acceptance/features/$1"; }
-dccafd(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Acceptance/features/$1"; }
+dccaf(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f $@"; }
+dccafd(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Feature/$@"; }
 
 # Codeception feature tests
-dcca(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vv -f tests/Acceptance/$1"; }
-dccad(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f tests/Acceptance/$1"; }
+dcca(){ dbash -c "php bin/codecept run Acceptance -n -vv -f tests/Acceptance/$1"; }
+dccad(){ dbash -c "php bin/codecept run Acceptance -n -vvv -f tests/Acceptance/$1"; }
 
 dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1"; }
 
@@ -304,7 +311,8 @@ dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1"; }
 # PHPUnit
 
 alias dpu='dbash -c "bin/phpunit --testsuite unit --no-coverage"'
-alias dpus='dbash -c "bin/simple-phpunit --stop-on-failure --testsuite unit"'
+alias dpus='dbash -c "bin/simple-phpunit --testsuite unit --dont-report-useless-tests --stop-on-failure"'
+alias dpusr='dbash -c "bin/simple-phpunit --testsuite unit --dont-report-useless-tests --testdox-html /srv/www/redeye-dms/dms-unit.html"'
 
 # dpunit(){ dbash -c "bin/phpunit $@";}
 
@@ -312,7 +320,10 @@ dphpunit(){ dbash -c "bin/phpunit $@"; }
 
 # phpunit --filter methodName path/to/file.php
 dpuf(){ dbash -c "bin/phpunit --filter $1 $2"; }
+
 dpusf(){ dbash -c "bin/simple-phpunit --filter $@"; }
+dpusfd(){ dbash -c "bin/simple-phpunit --debug --color --testdox --filter $@"; }
+
 dpug(){ dbash -c "bin/phpunit --group $1"; }
 
 ###########################################################################################

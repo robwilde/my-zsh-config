@@ -89,8 +89,8 @@ alias diskusage='ncdu'
 # nativefier https://rocketlog.app/daily-log --icon /home/robert/Apps/Nativefier/rocketlog/android-chrome-512x512.png --name Rocketlog \
 # --height 1080 --min-width 1920 --single-instance --internal-urls 'https://rocketlog.app/*?'
 
-nativefier https://devhints.io/ --icon /home/robert/Apps/Nativefier/devhints/devhints-icon.jpg --name DevHints \
---height 1080 --min-width 1920 --single-instance --internal-urls 'https://devhints.io/*?'
+# nativefier https://devhints.io/ --icon /home/robert/Apps/Nativefier/devhints/devhints-icon.jpg --name DevHints \
+# --height 1080 --min-width 1920 --single-instance --internal-urls 'https://devhints.io/*?'
 
 ##############################################
 # Lando bits
@@ -130,10 +130,14 @@ ytmp3(){ youtube-dl -x --audio-format mp3 $1; }
 # https://rastating.github.io/setting-default-audio-device-in-ubuntu-18-04/
 ###################################################################################################################
 # Docker-Compose
-# alias dbash='docker-compose exec dms_web_local bash'
-alias dbashr='docker-compose exec dms_web_local bash'
-alias dbash='docker-compose exec --user 1000:www-data dms_web_local bash'
-alias dbasha='docker-compose exec --user dms_web_local dms_web_local bash'
+alias dbash='docker-compose exec dms_web_local bash'
+alias dbashr='docker compose exec dms_web_local bash'
+alias dbash='docker compose exec --user 1000:www-data dms_web_local bash'
+alias dbasha='docker compose exec --user dms_web_local dms_web_local bash'
+
+# alias dbashr='docker compose exec dms_web_test bash'
+# alias dbash='docker compose exec --user 1000:www-data dms_web_test bash'
+# alias dbasha='docker compose exec --user dms_web_test dms_web_test bash'
 
 dbashc(){ dbash -c "$1"; }
 dbashrc(){ dbashr -c "$1"; }
@@ -141,20 +145,24 @@ dbashac(){ dbashr -c "$1"; }
 
 ###################################################################################################################
 # Composer
-alias dcomposer='dbashrc "php composer.phar"'
-alias dcompucheck='dbashc "php composer.phar show -l"'
-alias dcompul='dbashrc "php composer.phar update --lock"'
+
+alias dcomposer='dbashr -c "php composer.phar"'
+alias dcompucheck='dbashr -c "php composer.phar show -l"'
+alias dcompul='dbashr -c "php composer.phar update --lock"'
 alias dcompdump='dbashr -c "php composer.phar dump-autoload"'
-alias dcv='dbashrc "php composer.phar validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
-alias dcompdiag='dbashrc "php composer.phar diagnose --no-interaction --ansi --verbose"'
+alias dcv='dbashr -c "php composer.phar validate --no-interaction --ansi --verbose --no-check-publish --with-dependencies"'
+alias dcompdiag='dbashr -c "php composer.phar diagnose --no-interaction --ansi --verbose"'
+
+alias dcompupdry='dbashr -c "php composer.phar update --dry-run --no-interaction --ansi --verbose"'
+alias dcompup='dbashr -c "php composer.phar update --no-interaction --ansi"'
+
+
 dcompreq(){ dbashr -c "php composer.phar require $1"; }
 dcompreqd(){ dbashr -c "php composer.phar require $1 --dev"; }
-
 dcomprem(){ dbashr -c "php composer.phar remove $@"; }
 
-dcomp(){ dbashc "php composer.phar $@"; }
-drcomp(){ dbashrc "php composer.phar $@"; }
-
+# dcomp(){ dbashc "php composer.phar $@"; }
+dcomp(){ dbashrc "php composer.phar $@"; }
 dcompin(){ dbashrc "php composer.phar install $@"; }
 
 dcompupdate(){
@@ -163,7 +171,7 @@ dcompupdate(){
        then
          echo "No arguments supplied";
      else
-        dbashr -c "php composer.phar update $1 --with-all-dependencies --prefer-stable";
+        dbashr -c "php composer.phar update $@ --with-all-dependencies --prefer-stable";
      fi
 }
 
@@ -206,6 +214,15 @@ darn(){ dbashrc "NODE_OPTIONS=--max_old_space_size=4096 yarn $@"; }
 # SQL for Admin Rights
 # UPDATE User SET roles = 'a:3:{i:0;s:10:"ROLE_EARLY";i:1;s:16:"ROLE_SUPER_ADMIN";i:2;s:10:"ROLE_ADMIN";}' WHERE id = 7871;
 
+
+# Clear all the cache and set the permissions
+alias delete-all-cache='dbashrc "php bin/console cache:clear --no-debug \
+                                && php bin/console doctrine:cache:clear-metadata --no-debug \
+                                && php bin/console doctrine:cache:clear-query --no-debug \
+                                && php bin/console doctrine:cache:clear-result --no-debug \
+                                && chown -R 1000:www-data app/var/doctrine \
+                                && chown -R 1000:www-data var/cache"'
+
 ###################################################################################################################
 # Symfony
 
@@ -236,6 +253,12 @@ alias xonp='dbashr -c "service php7.4-fpm stop \
                       && sleep 1 \
                       && echo -n xdebug.profiler_output_name=cachegrind.out.R%
                       && service php7.4-fpm start"'
+
+dcompri() { dbashr -c "php composer.phar recipes:install $@ -v"; }
+
+alias drector='dbashrc "bin/rector process src"'
+alias drectordry='dbashrc "bin/rector process src --dry-run"'
+alias drectordryv='dbashrc "bin/rector process src --dry-run -vvv"'
 
 ################################################################################################################
 # Docker
@@ -313,21 +336,21 @@ dccag(){ dbash -c "php vendor/bin/codecept run Acceptance -n -vvv -f -g $1"; }
 ###########################################################################################
 # PHPUnit
 
-alias dpu='dbash -c "bin/phpunit --testsuite unit --no-coverage"'
-alias dpus='dbash -c "bin/simple-phpunit --testsuite unit --dont-report-useless-tests --stop-on-failure"'
-alias dpusr='dbash -c "bin/simple-phpunit --testsuite unit --dont-report-useless-tests --testdox-html /srv/www/redeye-dms/dms-unit.html"'
+alias dpu='dbashr -c "bin/phpunit --testsuite unit --no-coverage"'
+alias dpus='dbashr -c "bin/simple-phpunit --testsuite unit --dont-report-useless-tests --stop-on-failure"'
+alias dpusr='dbashr -c "bin/simple-phpunit --testsuite unit --dont-report-useless-tests --testdox-html /srv/www/redeye-dms/dms-unit.html"'
 
 # dpunit(){ dbash -c "bin/phpunit $@";}
 
-dphpunit(){ dbash -c "bin/phpunit $@"; }
+dphpunit(){ dbashr -c "bin/phpunit $@"; }
 
 # phpunit --filter methodName path/to/file.php
-dpuf(){ dbash -c "bin/phpunit --filter $1 $2"; }
+dpuf(){ dbashr -c "bin/phpunit --filter $1 $2"; }
 
-dpusf(){ dbash -c "bin/simple-phpunit --filter $@"; }
-dpusfd(){ dbash -c "bin/simple-phpunit --debug --color --testdox --filter $@"; }
+dpusf(){ dbashr -c "bin/simple-phpunit --filter $@"; }
+dpusfd(){ dbashr -c "bin/simple-phpunit --debug --color --testdox --filter $@"; }
 
-dpug(){ dbash -c "bin/phpunit --group $1"; }
+dpug(){ dbashr -c "bin/phpunit --group $1"; }
 
 ###########################################################################################
 # PHP inspection tools in docker
@@ -354,6 +377,8 @@ alias phpcomp='docker run --rm -it --init -v "$PWD:$PWD" -w "$PWD" tophfr/phpcom
   --ignore=vendor,node_modules --report=json --report-file=./phpcompatibility_results.json --runtime-set testVersion 7. .'
 
 alias phpstan='docker run -v $PWD:/app --rm ghcr.io/phpstan/phpstan'
+
+alias dgrumrun='dbashc "php bin/grumphp run"'
 ###########################################################################################
 
 dpart(){ dbash -c "php artisan $1"; }
